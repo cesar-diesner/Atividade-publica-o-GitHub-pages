@@ -95,6 +95,20 @@
             margin-top: 0;
         }
         
+        .vehicle-type {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .tank { background-color: #8e44ad; }
+        .plane { background-color: #3498db; }
+        .ship { background-color: #16a085; }
+        .heli { background-color: #e74c3c; }
+        
         .search-container {
             margin: 20px 0;
             text-align: center;
@@ -136,6 +150,11 @@
             height: 20px;
             margin-right: 10px;
             vertical-align: middle;
+        }
+        
+        .br-rating {
+            font-weight: bold;
+            color: #f1c40f;
         }
     </style>
 </head>
@@ -183,6 +202,13 @@
         
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Pesquisar veículos...">
+            <select id="typeFilter">
+                <option value="all">Todos os Tipos</option>
+                <option value="tank">Tanques</option>
+                <option value="plane">Aviões</option>
+                <option value="ship">Navios</option>
+                <option value="heli">Helicópteros</option>
+            </select>
         </div>
         
         <div class="nation-section">
@@ -190,9 +216,7 @@
                 <h3><img src="https://i.imgur.com/6JZslp1.png" class="nation-flag" alt="EUA"> Estados Unidos</h3>
                 <span>▼</span>
             </div>
-            <div class="nation-content" id="usa">
-                <!-- Conteúdo será preenchido por JavaScript -->
-            </div>
+            <div class="nation-content" id="usa"></div>
         </div>
         
         <div class="nation-section">
@@ -200,9 +224,7 @@
                 <h3><img src="https://i.imgur.com/4kG5NdY.png" class="nation-flag" alt="Alemanha"> Alemanha</h3>
                 <span>▼</span>
             </div>
-            <div class="nation-content" id="germany">
-                <!-- Conteúdo será preenchido por JavaScript -->
-            </div>
+            <div class="nation-content" id="germany"></div>
         </div>
         
         <div class="nation-section">
@@ -210,9 +232,7 @@
                 <h3><img src="https://i.imgur.com/5ZJ4Z7Q.png" class="nation-flag" alt="URSS"> URSS</h3>
                 <span>▼</span>
             </div>
-            <div class="nation-content" id="ussr">
-                <!-- Conteúdo será preenchido por JavaScript -->
-            </div>
+            <div class="nation-content" id="ussr"></div>
         </div>
         
         <div class="nation-section">
@@ -220,9 +240,7 @@
                 <h3><img src="https://i.imgur.com/9YQJZJQ.png" class="nation-flag" alt="Grã-Bretanha"> Grã-Bretanha</h3>
                 <span>▼</span>
             </div>
-            <div class="nation-content" id="britain">
-                <!-- Conteúdo será preenchido por JavaScript -->
-            </div>
+            <div class="nation-content" id="britain"></div>
         </div>
         
         <div class="nation-section">
@@ -230,17 +248,45 @@
                 <h3><img src="https://i.imgur.com/7JZJZJQ.png" class="nation-flag" alt="Japão"> Japão</h3>
                 <span>▼</span>
             </div>
-            <div class="nation-content" id="japan">
-                <!-- Conteúdo será preenchido por JavaScript -->
+            <div class="nation-content" id="japan"></div>
+        </div>
+        
+        <div class="nation-section">
+            <div class="nation-header" onclick="toggleNation('italy')">
+                <h3><img src="https://i.imgur.com/8JZJZJQ.png" class="nation-flag" alt="Itália"> Itália</h3>
+                <span>▼</span>
             </div>
+            <div class="nation-content" id="italy"></div>
+        </div>
+        
+        <div class="nation-section">
+            <div class="nation-header" onclick="toggleNation('france')">
+                <h3><img src="https://i.imgur.com/9JZJZJQ.png" class="nation-flag" alt="França"> França</h3>
+                <span>▼</span>
+            </div>
+            <div class="nation-content" id="france"></div>
+        </div>
+        
+        <div class="nation-section">
+            <div class="nation-header" onclick="toggleNation('china')">
+                <h3><img src="https://i.imgur.com/0JZJZJQ.png" class="nation-flag" alt="China"> China</h3>
+                <span>▼</span>
+            </div>
+            <div class="nation-content" id="china"></div>
+        </div>
+        
+        <div class="nation-section">
+            <div class="nation-header" onclick="toggleNation('sweden')">
+                <h3><img src="https://i.imgur.com/1JZJZJQ.png" class="nation-flag" alt="Suécia"> Suécia</h3>
+                <span>▼</span>
+            </div>
+            <div class="nation-content" id="sweden"></div>
         </div>
     </div>
     
     <div class="container" id="stats">
         <h2>Estatísticas do Jogo</h2>
-        <div id="gameStatsChart">
-            <!-- Gráfico será renderizado aqui -->
-        </div>
+        <div id="gameStatsChart"></div>
     </div>
     
     <div class="container" id="about">
@@ -259,116 +305,327 @@
             usa: [
                 { 
                     name: "M1A2 Abrams", 
-                    type: "Tanque", 
+                    type: "tank", 
                     br: "10.7", 
                     description: "Principal tanque de batalha dos EUA com excelente mobilidade e proteção.",
                     image: "https://i.imgur.com/8JZJZJQ.jpg" 
                 },
                 { 
+                    name: "M1A1 Abrams", 
+                    type: "tank", 
+                    br: "10.3", 
+                    description: "Versão anterior do Abrams, ainda muito eficiente em combate.",
+                    image: "https://i.imgur.com/7JZJZJQ.jpg" 
+                },
+                { 
                     name: "F-16C Fighting Falcon", 
-                    type: "Avião", 
+                    type: "plane", 
                     br: "11.3", 
                     description: "Caça multiuso de quarta geração com excelente desempenho.",
                     image: "https://i.imgur.com/9JZJZJQ.jpg" 
                 },
                 { 
+                    name: "F-14 Tomcat", 
+                    type: "plane", 
+                    br: "11.7", 
+                    description: "Interceptor com mísseis AIM-54 Phoenix de longo alcance.",
+                    image: "https://i.imgur.com/6JZJZJQ.jpg" 
+                },
+                { 
                     name: "USS Fletcher", 
-                    type: "Navio", 
+                    type: "ship", 
                     br: "5.0", 
                     description: "Destroyer classe Fletcher com potente armamento antiaéreo.",
                     image: "https://i.imgur.com/7JZJZJQ.jpg" 
+                },
+                { 
+                    name: "AH-64 Apache", 
+                    type: "heli", 
+                    br: "10.3", 
+                    description: "Helicóptero de ataque com mísseis Hellfire e canhão de 30mm.",
+                    image: "https://i.imgur.com/5JZJZJQ.jpg" 
+                },
+                { 
+                    name: "P-51D Mustang", 
+                    type: "plane", 
+                    br: "4.7", 
+                    description: "Caça lendário da Segunda Guerra Mundial com excelente desempenho em alta altitude.",
+                    image: "https://i.imgur.com/4JZJZJQ.jpg" 
                 }
             ],
             germany: [
                 { 
                     name: "Leopard 2A6", 
-                    type: "Tanque", 
+                    type: "tank", 
                     br: "11.0", 
                     description: "Tanque alemão com canhão L55 de 120mm e excelente mobilidade.",
                     image: "https://i.imgur.com/6JZJZJQ.jpg" 
                 },
                 { 
+                    name: "Leopard 2A5", 
+                    type: "tank", 
+                    br: "10.7", 
+                    description: "Versão anterior do Leopard 2, ainda muito eficaz.",
+                    image: "https://i.imgur.com/5JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Tiger II (H)", 
+                    type: "tank", 
+                    br: "6.7", 
+                    description: "Tanque pesado alemão da Segunda Guerra com canhão KwK 43 de 88mm.",
+                    image: "https://i.imgur.com/4JZJZJQ.jpg" 
+                },
+                { 
                     name: "MiG-29G", 
-                    type: "Avião", 
+                    type: "plane", 
                     br: "11.3", 
                     description: "Caça de superioridade aérea com excelente desempenho em altas velocidades.",
                     image: "https://i.imgur.com/5JZJZJQ.jpg" 
                 },
                 { 
                     name: "Prinz Eugen", 
-                    type: "Navio", 
+                    type: "ship", 
                     br: "6.0", 
                     description: "Cruzador pesado alemão com poderosos canhões de 203mm.",
                     image: "https://i.imgur.com/4JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Tiger UHT", 
+                    type: "heli", 
+                    br: "10.7", 
+                    description: "Helicóptero de ataque com mísseis PARS 3 LR guiados por radar.",
+                    image: "https://i.imgur.com/3JZJZJQ.jpg" 
+                },
+                { 
+                    name: "BF 109 F-4", 
+                    type: "plane", 
+                    br: "4.0", 
+                    description: "Um dos melhores caças alemães da Segunda Guerra Mundial.",
+                    image: "https://i.imgur.com/2JZJZJQ.jpg" 
                 }
             ],
             ussr: [
                 { 
                     name: "T-80BVM", 
-                    type: "Tanque", 
+                    type: "tank", 
                     br: "11.0", 
                     description: "Tanque soviético modernizado com blindagem reativa e boa mobilidade.",
                     image: "https://i.imgur.com/3JZJZJQ.jpg" 
                 },
                 { 
+                    name: "T-72B3", 
+                    type: "tank", 
+                    br: "10.7", 
+                    description: "Tanque médio soviético com boa relação custo-benefício.",
+                    image: "https://i.imgur.com/2JZJZJQ.jpg" 
+                },
+                { 
+                    name: "IS-2", 
+                    type: "tank", 
+                    br: "6.3", 
+                    description: "Tanque pesado soviético com canhão de 122mm devastador.",
+                    image: "https://i.imgur.com/1JZJZJQ.jpg" 
+                },
+                { 
                     name: "Su-27", 
-                    type: "Avião", 
+                    type: "plane", 
                     br: "11.3", 
                     description: "Caça de superioridade aérea com excelente manobrabilidade.",
                     image: "https://i.imgur.com/2JZJZJQ.jpg" 
                 },
                 { 
                     name: "Kronshtadt", 
-                    type: "Navio", 
+                    type: "ship", 
                     br: "6.0", 
                     description: "Cruzador de batalha soviético com canhões de 305mm.",
                     image: "https://i.imgur.com/1JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Ka-50 Black Shark", 
+                    type: "heli", 
+                    br: "10.7", 
+                    description: "Helicóptero de ataque com mísseis Vikhr guiados a laser.",
+                    image: "https://i.imgur.com/0JZJZJQ.jpg" 
+                },
+                { 
+                    name: "IL-2 Sturmovik", 
+                    type: "plane", 
+                    br: "3.7", 
+                    description: "Avião de ataque ao solo lendário da Segunda Guerra.",
+                    image: "https://i.imgur.com/9JZJZJQ.jpg" 
                 }
             ],
             britain: [
                 { 
                     name: "Challenger 2", 
-                    type: "Tanque", 
+                    type: "tank", 
                     br: "11.0", 
                     description: "Tanque britânico com excelente proteção frontal.",
                     image: "https://i.imgur.com/0JZJZJQ.jpg" 
                 },
                 { 
+                    name: "Challenger 1", 
+                    type: "tank", 
+                    br: "10.3", 
+                    description: "Versão anterior do Challenger, ainda muito eficaz.",
+                    image: "https://i.imgur.com/9JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Centurion Mk.3", 
+                    type: "tank", 
+                    br: "7.3", 
+                    description: "Tanque médio britânico pós-guerra com canhão de 20 libras.",
+                    image: "https://i.imgur.com/8JZJZJQ.jpg" 
+                },
+                { 
                     name: "Tornado F.3", 
-                    type: "Avião", 
+                    type: "plane", 
                     br: "11.3", 
                     description: "Interceptor com mísseis Skyflash e excelente desempenho em alta altitude.",
                     image: "https://i.imgur.com/9JZJZJQ.jpg" 
                 },
                 { 
                     name: "HMS Dido", 
-                    type: "Navio", 
+                    type: "ship", 
                     br: "5.0", 
                     description: "Cruzador leve britânico com armamento antiaéreo eficiente.",
                     image: "https://i.imgur.com/8JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Spitfire Mk.IX", 
+                    type: "plane", 
+                    br: "5.0", 
+                    description: "Um dos melhores caças britânicos da Segunda Guerra Mundial.",
+                    image: "https://i.imgur.com/7JZJZJQ.jpg" 
                 }
             ],
             japan: [
                 { 
                     name: "Type 10", 
-                    type: "Tanque", 
+                    type: "tank", 
                     br: "11.0", 
                     description: "Tanque japonês moderno com canhão de 120mm e excelente mobilidade.",
                     image: "https://i.imgur.com/7JZJZJQ.jpg" 
                 },
                 { 
+                    name: "Type 90", 
+                    type: "tank", 
+                    br: "10.7", 
+                    description: "Tanque japonês com carregador automático e boa mobilidade.",
+                    image: "https://i.imgur.com/6JZJZJQ.jpg" 
+                },
+                { 
                     name: "F-15J", 
-                    type: "Avião", 
+                    type: "plane", 
                     br: "11.3", 
                     description: "Caça de superioridade aérea baseado no F-15 Eagle americano.",
                     image: "https://i.imgur.com/6JZJZJQ.jpg" 
                 },
                 { 
+                    name: "A6M5 Zero", 
+                    type: "plane", 
+                    br: "5.3", 
+                    description: "Caça japonês lendário da Segunda Guerra com excelente manobrabilidade.",
+                    image: "https://i.imgur.com/5JZJZJQ.jpg" 
+                },
+                { 
                     name: "IJN Yuudachi", 
-                    type: "Navio", 
+                    type: "ship", 
                     br: "5.0", 
                     description: "Destroyer japonês com poderosos torpedos Tipo 93.",
                     image: "https://i.imgur.com/5JZJZJQ.jpg" 
+                }
+            ],
+            italy: [
+                { 
+                    name: "Ariete (P)", 
+                    type: "tank", 
+                    br: "10.7", 
+                    description: "Tanque italiano com canhão de 120mm e boa mobilidade.",
+                    image: "https://i.imgur.com/4JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Centauro ROMOR", 
+                    type: "tank", 
+                    br: "9.0", 
+                    description: "Veículo blindado de rodas com canhão de 105mm.",
+                    image: "https://i.imgur.com/3JZJZJQ.jpg" 
+                },
+                { 
+                    name: "G.91 R/4", 
+                    type: "plane", 
+                    br: "8.7", 
+                    description: "Caça-bombardeiro italiano com capacidade de carregar mísseis AS-20 Nord.",
+                    image: "https://i.imgur.com/2JZJZJQ.jpg" 
+                }
+            ],
+            france: [
+                { 
+                    name: "Leclerc S2", 
+                    type: "tank", 
+                    br: "11.0", 
+                    description: "Tanque francês moderno com carregador automático e excelente mobilidade.",
+                    image: "https://i.imgur.com/1JZJZJQ.jpg" 
+                },
+                { 
+                    name: "AMX-30B2 Brenus", 
+                    type: "tank", 
+                    br: "9.0", 
+                    description: "Tanque francês com blindagem reativa ERA.",
+                    image: "https://i.imgur.com/0JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Mirage 2000C", 
+                    type: "plane", 
+                    br: "11.3", 
+                    description: "Caça francês de superioridade aérea com mísseis Magic II.",
+                    image: "https://i.imgur.com/9JZJZJQ.jpg" 
+                }
+            ],
+            china: [
+                { 
+                    name: "ZTZ99-III", 
+                    type: "tank", 
+                    br: "10.7", 
+                    description: "Tanque chinês moderno com blindagem reativa e canhão de 125mm.",
+                    image: "https://i.imgur.com/8JZJZJQ.jpg" 
+                },
+                { 
+                    name: "Type 96A", 
+                    type: "tank", 
+                    br: "9.7", 
+                    description: "Tanque chinês com blindagem reativa básica.",
+                    image: "https://i.imgur.com/7JZJZJQ.jpg" 
+                },
+                { 
+                    name: "J-8B", 
+                    type: "plane", 
+                    br: "11.0", 
+                    description: "Interceptor chinês com mísseis PL-5B.",
+                    image: "https://i.imgur.com/6JZJZJQ.jpg" 
+                }
+            ],
+            sweden: [
+                { 
+                    name: "Strv 122B PLSS", 
+                    type: "tank", 
+                    br: "11.0", 
+                    description: "Versão sueca do Leopard 2A5 com melhorias na blindagem.",
+                    image: "https://i.imgur.com/5JZJZJQ.jpg" 
+                },
+                { 
+                    name: "CV90120", 
+                    type: "tank", 
+                    br: "10.0", 
+                    description: "Veículo blindado de rodas com canhão de 120mm.",
+                    image: "https://i.imgur.com/4JZJZJQ.jpg" 
+                },
+                { 
+                    name: "J35D Draken", 
+                    type: "plane", 
+                    br: "10.7", 
+                    description: "Caça sueco com design delta único.",
+                    image: "https://i.imgur.com/3JZJZJQ.jpg" 
                 }
             ]
         };
@@ -380,17 +637,34 @@
                 vehiclesData[nation].forEach(vehicle => {
                     const vehicleCard = document.createElement('div');
                     vehicleCard.className = 'vehicle-card';
+                    vehicleCard.dataset.type = vehicle.type;
+                    
+                    // Determina a classe CSS com base no tipo
+                    const typeClass = vehicle.type === 'tank' ? 'tank' : 
+                                     vehicle.type === 'plane' ? 'plane' : 
+                                     vehicle.type === 'ship' ? 'ship' : 'heli';
+                    
                     vehicleCard.innerHTML = `
                         <img src="${vehicle.image}" alt="${vehicle.name}" class="vehicle-image" onerror="this.src='https://i.imgur.com/JYlZf3j.jpg'">
                         <div class="vehicle-info">
-                            <h3>${vehicle.name}</h3>
-                            <p><strong>Tipo:</strong> ${vehicle.type}</p>
-                            <p><strong>BR:</strong> ${vehicle.br}</p>
+                            <h3>${vehicle.name} <span class="br-rating">BR ${vehicle.br}</span></h3>
+                            <p><span class="vehicle-type ${typeClass}">${getTypeName(vehicle.type)}</span></p>
                             <p>${vehicle.description}</p>
                         </div>
                     `;
                     nationContent.appendChild(vehicleCard);
                 });
+            }
+        }
+
+        // Função para obter o nome completo do tipo
+        function getTypeName(type) {
+            switch(type) {
+                case 'tank': return 'Tanque';
+                case 'plane': return 'Avião';
+                case 'ship': return 'Navio';
+                case 'heli': return 'Helicóptero';
+                default: return 'Veículo';
             }
         }
 
@@ -418,18 +692,34 @@
 
         // Função de busca
         document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
+            filterVehicles();
+        });
+
+        // Filtro por tipo
+        document.getElementById('typeFilter').addEventListener('change', function() {
+            filterVehicles();
+        });
+
+        // Função combinada para filtros
+        function filterVehicles() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
             const vehicleCards = document.querySelectorAll('.vehicle-card');
             
             vehicleCards.forEach(card => {
                 const vehicleName = card.querySelector('h3').textContent.toLowerCase();
-                if (vehicleName.includes(searchTerm)) {
+                const vehicleType = card.dataset.type;
+                
+                const nameMatch = vehicleName.includes(searchTerm);
+                const typeMatch = typeFilter === 'all' || vehicleType === typeFilter;
+                
+                if (nameMatch && typeMatch) {
                     card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }
             });
-        });
+        }
 
         // Inicialização
         window.onload = function() {
